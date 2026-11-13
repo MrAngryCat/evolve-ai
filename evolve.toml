@@ -1,0 +1,3 @@
+# Phase 00 accepts only offline or mock. Neither starts an inference backend.
+[evolve]
+mode = "offline"
