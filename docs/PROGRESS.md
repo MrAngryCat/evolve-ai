@@ -4,16 +4,60 @@
 - Last updated: 2026-11-13
 - Current phase: 00 - Repo foundation
 - Phase status: READY_FOR_REVIEW
-- Architect review: preliminary acceptance of phase 00 reported by the owner; publication remains incomplete
+- Architect review: preliminary acceptance reported by owner; ready for final acceptance
 - Last approved phase: no authorization for phase 01
-- Publication status: BLOCKED (GitHub integration rejected write access)
+- Publication status: COMPLETED by owner through GitHub Desktop; independently verified
 - Tested code: phase 00 CLI/configuration on existing Windows Python 3.12.10 and 3.14.6
 - Benchmarked local models: none
 - Dependencies installed: none; local `.venv` created with `--without-pip`
-- GitHub: public https://github.com/MrAngryCat/evolve-ai exists; confirmed empty during the completion attempt below
-- Local Git limitation: initialization succeeded, subsequent `.git/config` write denied by execution environment; no local commits or successful push claimed
+- GitHub: https://github.com/MrAngryCat/evolve-ai, default branch `main`
+- Published foundation commit: `13c2ad8558e66fd0ff9c0f03b98458f6489b02dc` (`feat: complete phase 00 foundation`)
+- Final documentation: prepared locally; separate commit/push outcome recorded below
 
-## Publication completion attempt - 2026-11-13
+## Final phase 00 verification - 2026-11-13
+
+This section supersedes the historical failed publication attempts below.
+
+- Owner published through GitHub Desktop. GitHub integration independently
+  resolved remote `main` to `13c2ad8558e66fd0ff9c0f03b98458f6489b02dc` and
+  retrieved this commit with its expected message and 28 added source files.
+- Local `main` and `origin/main` resolve to the same full SHA. Before documentation
+  edits, `git status --porcelain=v1` was empty and `git diff --exit-code main --`
+  exited 0. Thus the tested tracked working copy matches the published commit,
+  subject to Git's normal line-ending normalization.
+- Published inventory: `.gitignore`, `AGENTS.md`, `README.md`, `pyproject.toml`,
+  `evolve.toml`, 11 Python files under `evolve/`, `tests/test_cli.py`, nine files
+  under `docs/`, and two under `prompts/` (28 total). Required instructions,
+  source, documentation and tests are present in the GitHub commit.
+- Tracked-path inspection found no virtual environment, temporary/cache data,
+  private config/database/log files, model weights or private-key files. A
+  local scan of all 28 text files for private-key headers and common GitHub,
+  AWS and API-token patterns found no matches (exit 0). Test-only sentinel
+  strings are synthetic; this limited scan is not a universal secret detector.
+- Fresh command: `& .\.venv\Scripts\python.exe -m unittest discover -s tests -v`
+  passed **all 13 tests in 51.982 seconds, exit 0**. Tests ran against the clean
+  published foundation before documentation changes; application code and tests
+  remain unchanged.
+- Direct `git ls-remote` failed with `Could not resolve host: github.com`, exit
+  128. Remote main verification used the authorized GitHub integration instead;
+  no claim of a successful fetch or push from this environment.
+- Only `README.md` and `docs/PROGRESS.md` are updated for final publication
+  bookkeeping. Architecture/ADRs remain unchanged; no dependencies, models,
+  system changes or paid services were introduced. Network access was limited
+  to repository verification/publication attempts. Phase 01 is not authorized.
+
+### Final documentation commit
+
+`git diff --check` passed (exit 0). `git add -- README.md docs/PROGRESS.md`
+failed (exit 128): unable to create `.git/index.lock`, Permission denied.
+No commit or push was attempted after that denial; no restriction was bypassed.
+The two documentation updates remain local and uncommitted. Use GitHub Desktop: open
+`A:\evolve-ai`, select `main`, review only README.md and docs/PROGRESS.md,
+commit with `docs: finalize phase 00 publication report`, then Push origin.
+Do not include generated files or use force push. This does not invalidate the
+independently verified foundation publication above.
+
+## Historical failed publication attempt - 2026-11-13
 
 Scope: publish the existing, preliminarily accepted phase 00 only, to the existing
 `MrAngryCat/evolve-ai` repository. No new repository or phase 01 work.
@@ -72,7 +116,10 @@ No protective setting, integration permission, system setting or billing
 configuration was changed. No paid dependency was added. Stop here; **phase 01
 is not authorized**.
 
-## Phase 00 - Foundation
+## Phase 00 - Foundation implementation record (historical)
+
+Publication/branch limitations in this older implementation record describe the
+earlier attempt; the final verification section above is authoritative today.
 
 ### Implemented scope
 

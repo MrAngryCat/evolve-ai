@@ -136,19 +136,14 @@ Git; дочерние команды ограничены таймаутом 10 
 
 ### История и откат
 
-Исходники этапа 00 подготовлены локально. Текущая локальная ветка —
-`phase-00-foundation`, коммитов пока нет. Состояние видно через `git status`;
-`git log` и `git show` станут доступны после появления истории.
-В среде выполнения Codex запись в уже созданный `.git` ограничена:
-локальный Git инициализирован, но remote/коммиты не записаны. История
-пока не опубликована: авторизованная GitHub-интеграция отклонила запись с
-ошибкой HTTP 403 `Resource not accessible by integration`. Актуальный итог
-зафиксирован в `docs/PROGRESS.md`. Только **после успешной публикации** ветки
-можно получить полноценную локальную историю, клонировав её в **новый**
-каталог и сохранив текущие файлы:
+Владелец опубликовал этап 00 через GitHub Desktop в ветке `main`.
+Коммит основы: `13c2ad8558e66fd0ff9c0f03b98458f6489b02dc`
+(`feat: complete phase 00 foundation`). Публикация независимо проверена;
+результаты и ограничения среды Codex описаны в `docs/PROGRESS.md`.
+Для получения истории в новом каталоге:
 
 ```powershell
-git clone --branch phase-00-foundation https://github.com/MrAngryCat/evolve-ai.git A:\evolve-ai-checkout
+git clone --branch main https://github.com/MrAngryCat/evolve-ai.git A:\evolve-ai-checkout
 ```
 
 Для отмены уже опубликованного изменения используйте `git revert <commit>`
