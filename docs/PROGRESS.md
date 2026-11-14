@@ -1,20 +1,78 @@
 # Canonical progress
 
 - Plan version: 1.0
-- Last updated: 2026-11-13
-- Current phase: 01 - Environment and hardware diagnostics
+- Last updated: 2026-11-14
+- Current phase: 02 - Core and Event System
 - Phase status: READY_FOR_REVIEW
-- Architect review: phase 00 accepted per owner; phase 01 awaits acceptance
-- Last approved phase: 00; phase 01 implementation authorized; phase 02 forbidden
-- Publication status: phase 00 completed by owner; phase 01 local changes only
-- Tested code: phase 01 full suite on Python 3.12.10; new tests also on 3.14.6
+- Architect review: phases 00/01 accepted per owner; phase 02 awaits review
+- Last approved phase: 01; phase 02 authorized, phases 03-20 not authorized
+- Publication status: phase 01 merged/published; phase 02 changes currently local
+- Tested code: see current phase 02 verification below
 - Benchmarked local models: none
 - Dependencies installed: none; local `.venv` created with `--without-pip`
 - GitHub: https://github.com/MrAngryCat/evolve-ai, default branch `main`
 - Published foundation commit: `13c2ad8558e66fd0ff9c0f03b98458f6489b02dc` (`feat: complete phase 00 foundation`)
 - Final documentation: prepared locally; separate commit/push outcome recorded below
 
-## Phase 01 - 2026-11-13
+## Phase 02 - 2026-11-14
+
+Preflight: clean phase-02-core-events at 4ad6b2d2eafbdeb88e2dbb593e307b476959b657;
+local main and GitHub main confirmed at same commit. Phase 01 ancestor check
+exited 0; all diagnostic files present. No existing local changes overwritten.
+
+Implemented frozen Goal/Task/Run/Event snapshots; explicit lifecycle and retries;
+finite one-at-a-time Orchestrator; cooperative cancellation and idempotent close;
+synchronous ordered event history with safe subscriptions; structured synthetic
+executor success/failure/cancellation; four-step demo with 14 printed events.
+No persistence, real model, external execution, background thread or scheduler.
+
+Created: evolve/core/entities.py, events.py, executor.py, orchestrator.py, demo.py;
+tests/test_core.py; docs/PHASE_02.md.
+Modified: evolve/core/__init__.py, evolve/cli.py, README.md, docs/DECISIONS.md
+(ADR-0008), docs/PROGRESS.md. Prior 29 tests unchanged.
+
+Review/fixes: reproduced premature core.closed, duplicate goal terminal event
+and terminal-Run mock acceptance with failing tests. Corrected deferred shutdown,
+aggregate state before cancellation delivery and once-per-transition terminal
+events. Read-only reviewer also identified mutable event metadata, exponential
+payload copying and unbounded subscriber emission chains; bounded/immutable
+validation and regression tests added. Demo is explicitly synthetic.
+
+Security/cost: no new dependencies, installs, models, network calls from Core,
+OS tools, credentials, file logs, SQLite or paid services. Only developer read-only
+GitHub verification used network. Immutable snapshots are encapsulation, not a
+sandbox; only trusted in-process executors/subscribers are supported. Cooperative
+cancellation does not interrupt arbitrary code. History is volatile and requires
+caller-managed lifetime; dispatch chains and individual payload work are bounded.
+
+Current authoritative scope is this section; phase 01/00 records below describe
+their historical implementation/authorization states. Phase 03 remains forbidden.
+
+### Actual phase 02 verification
+
+| Command | Exit | Result |
+|---|---:|---|
+| `& .\.venv\Scripts\python.exe -B -m unittest discover -s tests -p test_core.py -v` before implementation | 1 | Expected missing Orchestrator import (red baseline) |
+| Targeted core regressions `-k close_during`, `-k remaining_task`, `-k completed_run_rejected` before fixes | 1 each | Reproduced premature close, duplicate terminal event and terminal Run acceptance |
+| `& .\.venv\Scripts\python.exe -m unittest discover -s tests -v` final | 0 | **54 tests pass, 51.687 s** (29 existing + 25 Core) |
+| Existing Python 3.14.6 executable: `-B -m unittest discover -s tests -p test_core.py -v` | 0 | 25 Core tests pass, 0.007 s |
+| `& .\.venv\Scripts\python.exe -B -m evolve demo` | 0 | Explicit DEMO; four completed synthetic runs, 14 printed events, final completed Goal |
+| `git diff --check` | 0 | Tracked changes have no whitespace errors |
+
+No phase 00/01 test files were edited. Run the same full unittest command to
+reproduce verification; timings are this run's measurements, not performance goals.
+
+Git publication: `git add -- evolve/core evolve/cli.py tests/test_core.py
+docs/PHASE_02.md docs/PROGRESS.md docs/DECISIONS.md README.md` failed exit 128:
+`.git/index.lock` Permission denied. No commit/push attempted after the denial;
+no bypass. Existing phase-02-core-events branch remains the correct base.
+`git diff --exit-code -- tests/test_cli.py tests/test_resources.py evolve/diagnostics
+evolve/config.py` exited 0, confirming previous phase files are preserved.
+GitHub Desktop: select phase-02-core-events, review the 12 stage files listed
+above, commit `feat: add phase 02 core and event system`, Publish branch / Push
+origin, then obtain architect/owner review before merge or stage 03 work.
+
+## Phase 01 - 2026-11-13 (historical)
 
 Current scope supersedes old authorization/status statements in the historical
 phase 00 report below. Clean baseline: `606b7af`, main tracking origin/main;
