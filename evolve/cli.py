@@ -17,9 +17,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--config", type=Path, metavar="PATH",
                         help="локальный TOML-файл (перед командой)")
     commands = parser.add_subparsers(dest="command")
-    commands.add_parser("doctor", help="проверить базовое окружение и конфигурацию")
+    doctor = commands.add_parser("doctor", help="проверить базовое окружение и конфигурацию")
+    doctor.add_argument('--resources', action='store_true', help='офлайн-диагностика ресурсов')
+    doctor.add_argument('--json', action='store_true', help='структурированный отчёт (с --resources)')
     commands.add_parser("status", help="показать фактическое состояние основы")
     args = parser.parse_args(argv)
+    if args.command == 'doctor' and args.json and not args.resources:
+        parser.error('--json требует --resources')
     if args.command is None:
         parser.print_help()
         return 0
@@ -28,6 +32,15 @@ def main(argv: list[str] | None = None) -> int:
     except ConfigError as error:
         print(f"Ошибка конфигурации: {error}", file=sys.stderr)
         return 2
+
+    if args.command == 'doctor' and args.resources:
+        import json
+        from evolve.diagnostics import collect
+        report = collect(Path(__file__).resolve().parents[1])
+        if not args.json:
+            print('Диагностика ресурсов: bytes — байты; null — неизвестно. Inference не проверен.')
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return 0
 
     print(f"Evolve AI {__version__} | phase 00")
     print(f"Mode: {config.mode}")

@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "timestamp_utc": "2026-11-13T09:55:22.535834+00:00",
+  "python": {
+    "version": "3.12.10",
+    "bits": 64
+  },
+  "os": {
+    "name": "Windows",
+    "kernel": "10.0",
+    "build": 26200,
+    "architecture": "x64"
+  },
+  "cpu": {
+    "logical_cores": 16,
+    "physical_cores": 8,
+    "load_percent": null,
+    "source": "native topology / hardware registry (read-only)",
+    "name": "AMD Ryzen 7 7800X3D 8-Core Processor",
+    "architecture": "x64"
+  },
+  "ram": {
+    "total_bytes": 33410686976,
+    "available_bytes": 17673760768,
+    "used_bytes": 15736926208,
+    "load_percent": 47,
+    "source": "GlobalMemoryStatusEx"
+  },
+  "gpus": [
+    {
+      "name": "AMD Radeon RX 6700 XT",
+      "vram_bytes": 12836900864,
+      "shared_limit_bytes": 16705343488,
+      "source": "DXGI",
+      "inference_tested": false,
+      "driver_version": null
+    },
+    {
+      "name": "AMD Radeon(TM) Graphics",
+      "vram_bytes": 509353984,
+      "shared_limit_bytes": 16705343488,
+      "source": "DXGI",
+      "inference_tested": false,
+      "driver_version": null
+    },
+    {
+      "name": "AMD Radeon RX 6700 XT",
+      "vram_bytes": 12836900864,
+      "shared_limit_bytes": 16705343488,
+      "source": "DXGI",
+      "inference_tested": false,
+      "driver_version": null
+    }
+  ],
+  "storage": {
+    "free_bytes": 309968326656,
+    "total_bytes": 1288490184704,
+    "medium": "not_verified"
+  },
+  "warnings": [
+    "cim_cpu_unavailable"
+  ],
+  "inference_tested": false,
+  "vulkan": {
+    "state": "working",
+    "loader_present": true,
+    "tool_present": true,
+    "devices": [
+      {
+        "apiVersion": "1.4.315",
+        "driverVersion": "2.0.353",
+        "deviceType": "PHYSICAL_DEVICE_TYPE_DISCRETE_GPU",
+        "deviceName": "AMD Radeon RX 6700 XT",
+        "driverName": "AMD proprietary driver",
+        "driverInfo": "26.10.1 (AMD proprietary shader compiler)"
+      },
+      {
+        "apiVersion": "1.4.315",
+        "driverVersion": "2.0.353",
+        "deviceType": "PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU",
+        "deviceName": "AMD Radeon(TM) Graphics",
+        "driverName": "AMD proprietary driver",
+        "driverInfo": "26.10.1 (AMD proprietary shader compiler)"
+      }
+    ],
+    "inference_tested": false
+  },
+  "tools": {
+    "powershell": true,
+    "git": true,
+    "vulkaninfo": true
+  },
+  "planning": {
+    "compatibility": "untested",
+    "gpu_capacity": "known",
+    "ram_budget_bytes": 13378793472,
+    "disk_budget_bytes": 288493490176,
+    "vram_budget_bytes": 10689417216,
+    "warnings": [],
+    "assumption": "reserve 4 GiB available RAM, 2 GiB VRAM, 20 GiB disk; not enforced",
+    "candidates": [
+      {
+        "name": "Qwen3.5-9B",
+        "illustrative_4bit_weight_lower_bytes": 4500000000,
+        "ram_weights_only_fit": true,
+        "vram_weights_only_fit": true,
+        "disk_weights_only_fit": true,
+        "verdict": "preliminary_only; actual GGUF, runtime, KV cache and offload must be measured"
+      },
+      {
+        "name": "Qwen3.5-35B-A3B",
+        "illustrative_4bit_weight_lower_bytes": 17500000000,
+        "ram_weights_only_fit": false,
+        "vram_weights_only_fit": false,
+        "disk_weights_only_fit": true,
+        "verdict": "preliminary_only; actual GGUF, runtime, KV cache and offload must be measured"
+      }
+    ]
+  }
+}

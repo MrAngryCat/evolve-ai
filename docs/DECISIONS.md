@@ -39,5 +39,18 @@ metadata only for now; setuptools is a build-time dependency, not a source
 run/test dependency. Initial work stays on `phase-00-foundation` for review.
 Phase 01 remains unauthorized.
 
+## ADR-0007 - Phase 01 read-only diagnostics (2026-11-13)
+
+Owner authorized phase 01 only. Use stdlib, native Windows APIs and a fixed local
+CIM property projection, with native CPU fallback. DXGI SIZE_T gives dedicated
+VRAM without WMI AdapterRAM's 32-bit truncation. No summed shared RAM/VRAM.
+Optional installed Vulkan summary is restricted to system/VulkanSDK executables;
+no arbitrary shell, command string from users/models, or tool registry is added.
+Subprocesses have timeout and streaming output cap; published fields omit IDs,
+paths and raw errors. Collection is opt-in behind doctor --resources; JSON is
+versioned, unknown values are explicit, CPU/GPU profiling and controls deferred.
+Model-fit arithmetic is illustrative weights-only, not a compatibility benchmark.
+This leaves target architecture intact and does not authorize phase 02.
+
 ## Change format
 Each new ADR: id, date, context, options considered, decision, consequences and owner approval if architecture changes.

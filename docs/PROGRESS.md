@@ -2,19 +2,79 @@
 
 - Plan version: 1.0
 - Last updated: 2026-11-13
-- Current phase: 00 - Repo foundation
+- Current phase: 01 - Environment and hardware diagnostics
 - Phase status: READY_FOR_REVIEW
-- Architect review: preliminary acceptance reported by owner; ready for final acceptance
-- Last approved phase: no authorization for phase 01
-- Publication status: COMPLETED by owner through GitHub Desktop; independently verified
-- Tested code: phase 00 CLI/configuration on existing Windows Python 3.12.10 and 3.14.6
+- Architect review: phase 00 accepted per owner; phase 01 awaits acceptance
+- Last approved phase: 00; phase 01 implementation authorized; phase 02 forbidden
+- Publication status: phase 00 completed by owner; phase 01 local changes only
+- Tested code: phase 01 full suite on Python 3.12.10; new tests also on 3.14.6
 - Benchmarked local models: none
 - Dependencies installed: none; local `.venv` created with `--without-pip`
 - GitHub: https://github.com/MrAngryCat/evolve-ai, default branch `main`
 - Published foundation commit: `13c2ad8558e66fd0ff9c0f03b98458f6489b02dc` (`feat: complete phase 00 foundation`)
 - Final documentation: prepared locally; separate commit/push outcome recorded below
 
-## Final phase 00 verification - 2026-11-13
+## Phase 01 - 2026-11-13
+
+Current scope supersedes old authorization/status statements in the historical
+phase 00 report below. Clean baseline: `606b7af`, main tracking origin/main;
+previous documentation changes were committed by owner, nothing overwritten.
+
+Implemented: stdlib Windows diagnostics, optional doctor --resources / --json,
+portable mocked tests, measured privacy-filtered JSON snapshot and load-profile
+descriptions. No model execution/download, dependencies, agent loop, policy/tool
+executor, automatic resource control or phase 02 implementation.
+
+Created: evolve/diagnostics/__init__.py, evolve/diagnostics/windows.py,
+tests/test_resources.py, docs/PHASE_01.md, docs/HARDWARE_REPORT.json.
+Modified: evolve/cli.py, README.md, docs/DECISIONS.md (ADR-0007), docs/PROGRESS.md.
+
+Real measurements: Ryzen 7 7800X3D 8/16 x64; 31.12 GiB OS-visible RAM,
+16.46 GiB available, 47% load; RX 6700 XT 11.96 GiB dedicated VRAM plus AMD
+integrated graphics; 288.68 GiB disk free; Windows 10.0 build 26200 x64,
+Python 3.12.10 64-bit. Vulkan device enumeration works, API 1.4.315,
+driverInfo 26.10.1, Vulkan driverVersion 2.0.353. Inference remains untested.
+Full bytes/timestamp in HARDWARE_REPORT.json, interpretation in PHASE_01.md.
+
+Limitations: CIM did not provide CPU/Windows driver version; native CPU fallback
+succeeded, CPU load and CIM driver remain unknown. DXGI repeats an adapter entry;
+not independent VRAM pools. SSD type, bandwidth, free VRAM and model speed unknown.
+9B is a promising resource candidate only. 35B exceeds current conservative
+RAM-only/full-GPU weights budgets; split offload untested. Planning reserves and
+nominal four-bit lower bounds are assumptions, not requirements or benchmarks.
+
+Read-only review identified Vulkan block attribution, unsafe PATH execution and
+post-capture output limiting. Fixed: GPU block parser, trusted .exe locations,
+streaming 256 KiB combined-output cap with child timeout. Added regression tests.
+No third-party code copied; platform documentation sources listed in PHASE_01.md.
+
+Verification commands actually run:
+
+| Command | Exit | Result |
+|---|---:|---|
+| `& .\.venv\Scripts\python.exe -B -m unittest discover -s tests -p test_resources.py -v` before module existed | 1 | Expected missing-module error (red baseline) |
+| Targeted `-k fields_stay` resource test before Vulkan parser fix | 1 | Expected wrong-device attribution reproduced |
+| `& .\.venv\Scripts\python.exe -m unittest discover -s tests -v` final | 0 | 29 tests, 52.477 s; original 13 unchanged plus 16 diagnostics tests |
+| `& .\.venv\Scripts\python.exe -B -m unittest discover -s tests -p test_resources.py -v` final targeted run | 0 | 16 tests, 0.080 s |
+| Existing Python 3.14.6 executable with `-B -m unittest discover -s tests -p test_resources.py -v` | 0 | 16 tests, 0.077 s |
+| `& .\.venv\Scripts\python.exe -B -m evolve doctor --resources --json` | 0 | Actual hardware snapshot, sanitized and saved as docs/HARDWARE_REPORT.json |
+| Python AST parse of source/tests and saved JSON parse | 0 | Valid syntax and JSON; inference_tested false |
+| `git diff --check` | 0 | No whitespace errors in tracked changes |
+
+Real probes are read-only and local. Mocked diagnostic tests check missing Vulkan,
+unknown GPU/data, low disk, redacted failures, no network/system-write actions,
+privacy, trusted executable selection, output overflow and process timeout.
+No performance benchmark, model runtime or system policy enforcement is claimed.
+Phase 01 status: READY_FOR_REVIEW with stated CIM/free-VRAM/storage-type limitations;
+publication requires owner GitHub Desktop action due environment denial.
+
+Git: `git switch -c phase-01-diagnostics` failed exit 128 (refs lock Permission
+denied). No commit/push attempted or claimed; no bypass. In GitHub Desktop create
+phase-01-diagnostics carrying changes, review the nine files listed above,
+commit `feat: add phase 01 resource diagnostics`, Push origin. Final acceptance
+and phase 02 authorization are separate owner/architect decisions.
+
+## Final phase 00 verification - 2026-11-13 (historical)
 
 This section supersedes the historical failed publication attempts below.
 

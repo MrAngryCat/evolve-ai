@@ -155,6 +155,23 @@ git clone --branch main https://github.com/MrAngryCat/evolve-ai.git A:\evolve-ai
 не требуется; setuptools указан только как необязательная для такого
 запуска зависимость сборки.
 
+## Этап 01: ресурсы компьютера
+
+```powershell
+& .\.venv\Scripts\python.exe -m evolve doctor --resources
+& .\.venv\Scripts\python.exe -m evolve doctor --resources --json
+```
+
+Расширенная диагностика работает офлайн без установки пакетов. Проверяет CPU,
+RAM, выделенную VRAM через DXGI, диск проекта и установленный Vulkan.
+Неизвестные значения обозначены `null`; успех перечисления Vulkan не означает
+совместимость модели или inference. Команды не устанавливают ничего и не
+меняют системные настройки. Обычные `doctor` и `status` сохранены.
+Описание источников, профилей Idle/Balanced/Research, предположений и ограничений:
+[docs/PHASE_01.md](docs/PHASE_01.md). Измеренный снимок:
+[docs/HARDWARE_REPORT.json](docs/HARDWARE_REPORT.json).
+Этап 02 требует отдельной приёмки.
+
 ## The first true autonomy test
 
 Owner: **«Evolve, добавь себе качественный русский синтез речи»**.
