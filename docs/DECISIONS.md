@@ -52,5 +52,19 @@ versioned, unknown values are explicit, CPU/GPU profiling and controls deferred.
 Model-fit arithmetic is illustrative weights-only, not a compatibility benchmark.
 This leaves target architecture intact and does not authorize phase 02.
 
+## ADR-0008 - In-process core lifecycle and events (2026-11-14)
+
+Owner authorized phase 02 after phase 01 acceptance/merge. Use frozen dataclass
+snapshots and explicit orchestrator methods, with Enum states and fresh Run per
+attempt; keep prior runs immutable. Goal state is an aggregate of registered
+tasks. A synchronous ordered bus isolates subscriber errors and bounds nested
+emissions and payload copying. Cancellation is cooperative, close completes only
+after active work is finalized, and arbitrary code is not forcibly interruptible.
+Executor is a Protocol with only a synthetic implementation. Store state/history
+in memory only; no SQLite, model adapter, shell executor or scheduler. Core is
+single-threaded and independent of model backends. Metadata/results are immutable
+and validated; credential-key rejection is not a general secret-redaction policy.
+Phase 03 storage design and privileged tool safety remain explicitly deferred.
+
 ## Change format
 Each new ADR: id, date, context, options considered, decision, consequences and owner approval if architecture changes.

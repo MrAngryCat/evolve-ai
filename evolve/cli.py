@@ -21,6 +21,7 @@ def main(argv: list[str] | None = None) -> int:
     doctor.add_argument('--resources', action='store_true', help='офлайн-диагностика ресурсов')
     doctor.add_argument('--json', action='store_true', help='структурированный отчёт (с --resources)')
     commands.add_parser("status", help="показать фактическое состояние основы")
+    commands.add_parser('demo', help='конечная имитация задач Core без LLM')
     args = parser.parse_args(argv)
     if args.command == 'doctor' and args.json and not args.resources:
         parser.error('--json требует --resources')
@@ -32,6 +33,10 @@ def main(argv: list[str] | None = None) -> int:
     except ConfigError as error:
         print(f"Ошибка конфигурации: {error}", file=sys.stderr)
         return 2
+
+    if args.command == 'demo':
+        from evolve.core.demo import demo
+        return demo()
 
     if args.command == 'doctor' and args.resources:
         import json
